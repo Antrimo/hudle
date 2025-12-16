@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hudle/counter_cubit.dart';
+import 'package:hudle/bloc/counter_bloc.dart';
+import 'package:hudle/bloc/counter_event.dart';
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key, required this.title});
@@ -9,7 +10,7 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final counterCubit = CounterCubit();
+    final counterBloc = BlocProvider.of<CounterBloc>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -21,8 +22,7 @@ class MyHomePage extends StatelessWidget {
           mainAxisAlignment: .center,
           children: [
             const Text('You have pushed the button this many times:'),
-            BlocBuilder<CounterCubit, int>(
-              bloc: counterCubit,
+            BlocBuilder<CounterBloc, int>(
               builder: (context, counter) {
                 return Text(
                   '$counter',
@@ -38,7 +38,7 @@ class MyHomePage extends StatelessWidget {
         children: [
           FloatingActionButton(
             onPressed: () {
-              counterCubit.increment();
+              counterBloc.add(CounterIncrease());
             },
             tooltip: 'Increment',
             child: const Icon(Icons.add),
@@ -46,7 +46,7 @@ class MyHomePage extends StatelessWidget {
           SizedBox(height: 8),
           FloatingActionButton(
             onPressed: () {
-              counterCubit.decrement();
+              counterBloc.add(CounterDecrease());
             },
             tooltip: 'Decrement',
             child: const Icon(Icons.remove),
