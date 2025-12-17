@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import '../../core/constants/api_constants.dart';
 import '../models/weather_model.dart';
 
-class ApiService {
+class WeatherApiService {
   final Dio dio = Dio(BaseOptions(baseUrl: ApiConstants.baseUrl));
 
   Future<WeatherModel> fetchWeather(String cityName) async {
@@ -15,7 +15,6 @@ class ApiService {
           'units': 'metric',
         },
       );
-
       return WeatherModel.fromJson(response.data);
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionError) {

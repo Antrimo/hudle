@@ -1,11 +1,12 @@
-import 'package:hudle/data/services/api_service.dart';
+import 'package:hudle/data/models/weather_model.dart';
+import 'package:hudle/data/services/weather_api_service.dart';
 
 class WeatherRepository {
-  final ApiService weatherData;
+  final WeatherApiService weatherData;
 
-  WeatherRepository({required this.weatherData});
+  WeatherRepository(this.weatherData);
 
-  Future getWeather(String cityName) async {
-    return await weatherData.fetchWeather(cityName);
+  Future<WeatherModel> getWeatherByCity(String cityName) {
+    return weatherData.fetchWeather(cityName);
   }
 }
