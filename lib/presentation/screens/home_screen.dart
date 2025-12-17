@@ -4,6 +4,7 @@ import 'package:hudle/bloc/weather_bloc.dart';
 import 'package:hudle/bloc/weather_event.dart';
 import 'package:hudle/bloc/weather_state.dart';
 import 'package:hudle/core/utils/weather_cases.dart';
+import 'package:hudle/presentation/widgets/menu_widget.dart';
 import 'package:hudle/presentation/widgets/tile_widget.dart';
 import 'package:lottie/lottie.dart';
 
@@ -15,8 +16,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final TextEditingController searchController = TextEditingController();
-
   void openSearchPopup() {
     final TextEditingController controller = TextEditingController();
 
@@ -54,9 +53,20 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.pop(context);
   }
 
+  double _displayTemp(double temp, bool isCelsius) {
+    return isCelsius ? temp : (temp * 9 / 5) + 32;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: Colors.grey[500],
+      drawer: const MenuWidget(),
+      appBar: AppBar(
+        title: const Text('weather app'),
+        centerTitle: true,
+        elevation: 0,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -70,85 +80,92 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (state is WeatherSuccess) {
                     final weather = state.weather;
 
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          textBaseline: TextBaseline.alphabetic,
-                          crossAxisAlignment: CrossAxisAlignment.baseline,
-                          children: [
-                            Text(
-                              weather.cityName,
-                              style: const TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.w500,
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        context.read<WeatherBloc>().add(
+                          WeatherRefreshRequested(),
+                        );
+                      },
+                      child: ListView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        children: [
+                          Row(
+                            textBaseline: TextBaseline.ideographic,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                weather.cityName,
+                                style: const TextStyle(
+                                  fontSize: 36,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                            const Icon(Icons.location_pin, color: Colors.black),
-                            Spacer(),
-                            IconButton(
-                              icon: const Icon(Icons.search),
-                              onPressed: openSearchPopup,
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.dark_mode),
-                              onPressed: openSearchPopup,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          textBaseline: TextBaseline.alphabetic,
-                          crossAxisAlignment: CrossAxisAlignment.baseline,
-                          children: [
-                            Text(
-                              '${weather.temperature.toStringAsFixed(0)} °C',
-                              style: const TextStyle(
-                                fontSize: 64,
-                                fontWeight: FontWeight.w300,
+                              const SizedBox(width: 8),
+                              const Icon(
+                                Icons.location_pin,
+                                color: Colors.black,
                               ),
-                            ),
-                            const SizedBox(width: 16),
-                            Text(
-                              weather.weatherCondition,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                color: Colors.grey,
+                              Spacer(),
+                              IconButton(
+                                icon: const Icon(Icons.search),
+                                onPressed: openSearchPopup,
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Center(
-                          child: SizedBox(
-                            height: 350,
-                            child: Lottie.asset(
-                              WeatherAnimationMapper.getAnimation(
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            textBaseline: TextBaseline.alphabetic,
+                            crossAxisAlignment: CrossAxisAlignment.baseline,
+                            children: [
+                              Text(
+                                '${_displayTemp(weather.temperature, state.isCelsius).toStringAsFixed(1)}°'
+                                '${state.isCelsius ? 'C' : 'F'}',
+                                style: const TextStyle(
+                                  fontSize: 64,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Text(
                                 weather.weatherCondition,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.grey,
+                                ),
                               ),
-                              repeat: true,
-                              fit: BoxFit.contain,
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Center(
+                            child: SizedBox(
+                              height: 350,
+                              child: Lottie.asset(
+                                WeatherAnimationMapper.getAnimation(
+                                  weather.weatherCondition,
+                                ),
+                                repeat: true,
+                                fit: BoxFit.contain,
+                              ),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 24),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            TileWidget(
-                              label: 'Humidity',
-                              value: '${weather.humidity}%',
-                              icon: Icons.water_drop,
-                            ),
-                            TileWidget(
-                              label: 'Wind',
-                              value: '${weather.windSpeed} m/s',
-                              icon: Icons.air,
-                            ),
-                          ],
-                        ),
-                      ],
+                          const SizedBox(height: 24),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              TileWidget(
+                                label: 'Humidity',
+                                value: '${weather.humidity}%',
+                                icon: Icons.water_drop,
+                              ),
+                              TileWidget(
+                                label: 'Wind',
+                                value: '${weather.windSpeed} m/s',
+                                icon: Icons.air,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     );
                   }
 
