@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hudle/bloc/weather_bloc.dart';
 import 'package:hudle/data/repository/weather_repository.dart';
 import 'package:hudle/data/services/weather_api_service.dart';
-import 'package:hudle/presentation/home_screen.dart';
+import 'package:hudle/presentation/screens/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         create: (context) => WeatherBloc(context.read<WeatherRepository>()),
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: const HomeScreen(title: 'Hudle Weather App'),
+          home: const HomeScreen(),
         ),
       ),
     );

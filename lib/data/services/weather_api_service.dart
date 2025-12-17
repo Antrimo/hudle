@@ -15,6 +15,7 @@ class WeatherApiService {
           'units': 'metric',
         },
       );
+      print(response.data);
       return WeatherModel.fromJson(response.data);
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionError) {
