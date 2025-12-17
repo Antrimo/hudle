@@ -17,7 +17,7 @@ class WeatherModel {
     return WeatherModel(
       cityName: json['name'],
       temperature: (json['main']['temp'] as num).toDouble(),
-      weatherCondition: json['weather'][0]['description'],
+      weatherCondition: json['weather'][0]['main'],
       humidity: json['main']['humidity'],
       windSpeed: (json['wind']['speed'] as num).toDouble(),
     );

@@ -17,3 +17,9 @@ class WeatherFailure extends WeatherState {
 
   WeatherFailure(this.message);
 }
+
+class WeatherThemeState extends WeatherState {
+  final bool isDark;
+
+  WeatherThemeState(this.isDark);
+}

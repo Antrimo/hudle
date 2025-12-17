@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hudle/bloc/weather_bloc.dart';
 import 'package:hudle/bloc/weather_event.dart';
 import 'package:hudle/bloc/weather_state.dart';
+import 'package:hudle/core/utils/weather_cases.dart';
 import 'package:hudle/presentation/widgets/tile_widget.dart';
+import 'package:lottie/lottie.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,38 +17,50 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController searchController = TextEditingController();
 
-  void searchWeather() {
-    final city = searchController.text.trim();
+  void openSearchPopup() {
+    final TextEditingController controller = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Search City'),
+          content: TextField(
+            controller: controller,
+            autofocus: true,
+            decoration: const InputDecoration(hintText: 'Enter city name'),
+            onSubmitted: (_) => _submitSearch(controller),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () => _submitSearch(controller),
+              child: const Text('Search'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _submitSearch(TextEditingController controller) {
+    final city = controller.text.trim();
     if (city.isNotEmpty) {
       context.read<WeatherBloc>().add(WeatherFetched(city));
     }
+    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: const Text('Weather App')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextField(
-              controller: searchController,
-              decoration: InputDecoration(
-                hintText: 'Enter city name',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: searchWeather,
-                ),
-              ),
-              onSubmitted: (_) => searchWeather(),
-            ),
-            const SizedBox(height: 24),
-
             Expanded(
               child: BlocBuilder<WeatherBloc, WeatherState>(
                 builder: (context, state) {
@@ -57,29 +71,65 @@ class _HomeScreenState extends State<HomeScreen> {
                     final weather = state.weather;
 
                     return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          weather.cityName,
-                          style: const TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        Row(
+                          textBaseline: TextBaseline.alphabetic,
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          children: [
+                            Text(
+                              weather.cityName,
+                              style: const TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            const Icon(Icons.location_pin, color: Colors.black),
+                            Spacer(),
+                            IconButton(
+                              icon: const Icon(Icons.search),
+                              onPressed: openSearchPopup,
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.dark_mode),
+                              onPressed: openSearchPopup,
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 8),
-                        Text(
-                          '${weather.temperature.toStringAsFixed(1)} °C',
-                          style: const TextStyle(
-                            fontSize: 48,
-                            fontWeight: FontWeight.w300,
-                          ),
+                        Row(
+                          textBaseline: TextBaseline.alphabetic,
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          children: [
+                            Text(
+                              '${weather.temperature.toStringAsFixed(0)} °C',
+                              style: const TextStyle(
+                                fontSize: 64,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Text(
+                              weather.weatherCondition,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 8),
-                        Text(
-                          weather.weatherCondition,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.grey,
+                        Center(
+                          child: SizedBox(
+                            height: 350,
+                            child: Lottie.asset(
+                              WeatherAnimationMapper.getAnimation(
+                                weather.weatherCondition,
+                              ),
+                              repeat: true,
+                              fit: BoxFit.contain,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 24),
@@ -112,10 +162,24 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   }
 
-                  return const Center(
-                    child: Text(
-                      'Search for a city to get weather details',
-                      style: TextStyle(fontSize: 16),
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Lottie.asset(
+                          'assets/lottie/default.json',
+                          height: 200,
+                          repeat: true,
+                        ),
+                        const Text(
+                          'Search for a city to get weather details',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.search),
+                          onPressed: openSearchPopup,
+                        ),
+                      ],
                     ),
                   );
                 },
