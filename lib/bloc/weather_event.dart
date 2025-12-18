@@ -8,8 +8,6 @@ class WeatherFetched extends WeatherEvent {
 
 class WeatherRefreshRequested extends WeatherEvent {}
 
-class WeatherThemeChanged extends WeatherEvent {
-  final bool isDarkMode;
+class WeatherThemeToggled extends WeatherEvent {}
 
-  WeatherThemeChanged(this.isDarkMode);
-}
+class WeatherUnitToggled extends WeatherEvent {}
