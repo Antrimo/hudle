@@ -22,4 +22,24 @@ class WeatherModel {
       windSpeed: (json['wind']['speed'] as num).toDouble(),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'cityName': cityName,
+      'temperature': temperature,
+      'weatherCondition': weatherCondition,
+      'humidity': humidity,
+      'windSpeed': windSpeed,
+    };
+  }
+
+  factory WeatherModel.fromCache(Map<String, dynamic> json) {
+    return WeatherModel(
+      cityName: json['cityName'],
+      temperature: json['temperature'],
+      weatherCondition: json['weatherCondition'],
+      humidity: json['humidity'],
+      windSpeed: json['windSpeed'],
+    );
+  }
 }

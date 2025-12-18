@@ -15,15 +15,15 @@ class WeatherApiService {
           'units': 'metric',
         },
       );
-      print(response.data);
+
       return WeatherModel.fromJson(response.data);
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionError) {
-        throw Exception('No internet connection found');
+        throw 'No internet connection';
       }
-      throw Exception('Something went wrong');
-    } catch (e) {
-      throw Exception('Unexpected error occurred');
+      throw 'Failed to fetch weather data';
+    } catch (_) {
+      throw 'Unexpected error occurred';
     }
   }
 }
