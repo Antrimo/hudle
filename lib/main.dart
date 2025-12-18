@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hudle/bloc/weather_bloc.dart';
 import 'package:hudle/bloc/weather_state.dart';
-import 'package:hudle/data/local/weather_cache.dart';
+import 'package:hudle/data/local/weather_cache_local.dart';
+import 'package:hudle/data/local/weather_history_local.dart';
 import 'package:hudle/data/repository/weather_repository.dart';
 import 'package:hudle/data/services/weather_api_service.dart';
 import 'package:hudle/presentation/screens/home_screen.dart';
@@ -17,7 +18,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider(
-      create: (_) => WeatherRepository(WeatherApiService(), WeatherCache()),
+      create: (_) => WeatherRepository(
+        WeatherApiService(),
+        WeatherCacheLocal(),
+        WeatherHistoryLocal(),
+      ),
       child: BlocProvider(
         create: (context) => WeatherBloc(context.read<WeatherRepository>()),
         child: BlocBuilder<WeatherBloc, WeatherState>(

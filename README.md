@@ -15,8 +15,9 @@ The app follows **BLoC architecture**, uses **Dio for API calls**, and supports 
 - API integration using `Dio`
 - Pull to refresh (Liquid Pull Refresh)
 - Light / Dark mode
-- Cache last searched weather locally
 - Lottie animations based on weather
+- Cache last searched weather locally
+- Store search history and allow users to repeat a past search
 
 
 ## architecture & structure
@@ -80,4 +81,4 @@ flutter run
 
 ## Challenges faced
 
-As I was leaning bloc, I had confusion with the structure flow and coordination of the `Bloc` to the `Repository`. There I used AI to understand the flow and how to approach it.
+As I was leaning bloc, I had confusion with the structure flow and coordination of the `Bloc` to the `Repository` and also for the Storing search history. There I used AI to understand the flow and how to approach it.

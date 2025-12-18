@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hudle/data/models/weather_model.dart';
 
-class WeatherCache {
+class WeatherCacheLocal {
   static const _cacheKey = 'cached_weather';
 
   // Saves the weather data to local storage

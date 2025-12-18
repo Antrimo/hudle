@@ -4,6 +4,7 @@ import 'package:hudle/bloc/weather_bloc.dart';
 import 'package:hudle/bloc/weather_event.dart';
 import 'package:hudle/bloc/weather_state.dart';
 import 'package:hudle/core/utils/weather_cases.dart';
+import 'package:hudle/data/local/weather_history_local.dart';
 import 'package:hudle/presentation/widgets/menu_widget.dart';
 import 'package:hudle/presentation/widgets/tile_widget.dart';
 import 'package:liquid_pull_refresh/liquid_pull_refresh.dart';
@@ -17,20 +18,58 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  void _openSearchPopup() {
-    final TextEditingController controller = TextEditingController();
+  void _openSearchPopup() async {
+    final controller = TextEditingController();
+    final historyHelper = WeatherHistoryLocal();
+    final history = await historyHelper.loadHistory();
 
-    // Show dialog to input city name
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text('Search your city'),
-          content: TextField(
-            controller: controller,
-            autofocus: true,
-            decoration: const InputDecoration(hintText: 'Enter city name'),
-            onSubmitted: (_) => _submitSearch(controller),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextField(
+                  controller: controller,
+                  autofocus: true,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter city name...',
+                  ),
+                ),
+
+                if (history.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Recent searches',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 8),
+
+                  SizedBox(
+                    height: 150,
+                    child: ListView.builder(
+                      itemCount: history.length,
+                      itemBuilder: (context, index) {
+                        final city = history[index];
+                        return ListTile(
+                          leading: const Icon(Icons.history),
+                          title: Text(city),
+                          onTap: () {
+                            controller.text = city;
+                            _submitSearch(controller, historyHelper);
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ],
+            ),
           ),
           actions: [
             TextButton(
@@ -38,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: const Text('Cancel'),
             ),
             ElevatedButton(
-              onPressed: () => _submitSearch(controller),
+              onPressed: () => _submitSearch(controller, historyHelper),
               child: const Text('Search'),
             ),
           ],
@@ -48,11 +87,16 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // function to handle search submission
-  void _submitSearch(TextEditingController controller) {
+  void _submitSearch(
+    TextEditingController controller,
+    WeatherHistoryLocal historyHelper,
+  ) {
     final city = controller.text.trim();
-    if (city.isNotEmpty) {
-      context.read<WeatherBloc>().add(WeatherFetched(city));
-    }
+    if (city.isEmpty) return;
+
+    historyHelper.saveCity(city);
+
+    context.read<WeatherBloc>().add(WeatherFetched(city));
     Navigator.pop(context);
   }
 
