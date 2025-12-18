@@ -106,7 +106,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       return Future.delayed(const Duration(milliseconds: 100));
                     },
                     child: ListView(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 32,
+                      ),
                       physics: const AlwaysScrollableScrollPhysics(),
                       children: [
                         Row(
