@@ -1,3 +1,5 @@
+// Maps weather conditions to its corresponding animation asset
+
 class WeatherAnimationMapper {
   static String getAnimation(String condition) {
     final weather = condition.toLowerCase();

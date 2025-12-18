@@ -3,6 +3,8 @@ import 'package:hudle/bloc/weather_event.dart';
 import 'package:hudle/bloc/weather_state.dart';
 import 'package:hudle/data/repository/weather_repository.dart';
 
+// Bloc to manage weather-related events and states
+
 class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   final WeatherRepository weatherRepository;
   bool isDarkMode = false;

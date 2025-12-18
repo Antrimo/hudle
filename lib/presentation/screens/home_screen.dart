@@ -20,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _openSearchPopup() {
     final TextEditingController controller = TextEditingController();
 
+    // Show dialog to input city name
     showDialog(
       context: context,
       builder: (context) {
@@ -46,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // function to handle search submission
   void _submitSearch(TextEditingController controller) {
     final city = controller.text.trim();
     if (city.isNotEmpty) {
@@ -54,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.pop(context);
   }
 
+  // Convert temperature based on selected unit
   double _displayTemp(double temp, bool isCelsius) {
     return isCelsius ? temp : (temp * 9 / 5) + 32;
   }
@@ -198,6 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 }
 
+                // Display error message if fetching weather fails
                 if (state is WeatherFailure) {
                   return Center(
                     child: Text(
@@ -211,6 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 }
 
+                // Default state for user to search for a city
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

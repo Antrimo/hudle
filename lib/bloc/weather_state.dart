@@ -1,5 +1,7 @@
 import 'package:hudle/data/models/weather_model.dart';
 
+// all possible states for weather bloc
+
 sealed class WeatherState {}
 
 class WeatherInitial extends WeatherState {}
