@@ -1,3 +1,5 @@
+// all user related events for weather bloc
+
 sealed class WeatherEvent {}
 
 class WeatherFetched extends WeatherEvent {

@@ -2,6 +2,8 @@ import 'package:hudle/data/local/weather_cache.dart';
 import 'package:hudle/data/models/weather_model.dart';
 import 'package:hudle/data/services/weather_api_service.dart';
 
+// Repository managing weather data fetching and caching instead of bloc
+
 class WeatherRepository {
   final WeatherApiService weatherData;
   final WeatherCache cache;

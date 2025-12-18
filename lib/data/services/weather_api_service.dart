@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import '../../core/constants/api_constants.dart';
 import '../models/weather_model.dart';
 
+// Service to fetch weather data from OpenWeatherMap API
+
 class WeatherApiService {
   final Dio dio = Dio(BaseOptions(baseUrl: ApiConstants.baseUrl));
 
