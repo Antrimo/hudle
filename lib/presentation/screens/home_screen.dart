@@ -60,10 +60,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       drawer: const MenuWidget(),
-      appBar: AppBar(title: const Text('weather app'), centerTitle: true),
+      appBar: AppBar(
+        backgroundColor: Colors.grey[500],
+        foregroundColor: Colors.black,
+        title: Text(
+          'Weather',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.5,
+            color: Colors.black,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: _openSearchPopup,
+            tooltip: 'Search city',
+          ),
+        ],
+        centerTitle: true,
+      ),
       body: Column(
         children: [
           Expanded(
@@ -77,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   return LiquidPullRefresh(
                     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                    color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
+                    color: Colors.grey.shade500,
                     showChildOpacityTransition: true,
                     height: 80,
                     animSpeedFactor: 2,
@@ -97,23 +115,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Text(
                               weather.cityName,
-                              style: const TextStyle(
-                                fontSize: 36,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: Theme.of(context).textTheme.headlineMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    height: 1.2,
+                                    letterSpacing: 0.2,
+                                  ),
                             ),
+
                             const SizedBox(width: 8),
                             Icon(
                               Icons.location_pin,
                               color: Theme.of(context).iconTheme.color,
-                            ),
-                            const Spacer(),
-                            IconButton(
-                              icon: Icon(
-                                Icons.search,
-                                color: Theme.of(context).iconTheme.color,
-                              ),
-                              onPressed: _openSearchPopup,
                             ),
                           ],
                         ),
@@ -125,15 +138,25 @@ class _HomeScreenState extends State<HomeScreen> {
                             Text(
                               '${_displayTemp(weather.temperature, state.isCelsius).toStringAsFixed(1)}°'
                               '${state.isCelsius ? 'C' : 'F'}',
-                              style: const TextStyle(
-                                fontSize: 64,
-                                fontWeight: FontWeight.w600,
-                              ),
+                              style: Theme.of(context).textTheme.displayLarge
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    height: 1.0,
+                                    letterSpacing: -1,
+                                  ),
                             ),
+
                             const SizedBox(width: 16),
                             Text(
                               weather.weatherCondition,
-                              style: const TextStyle(fontSize: 18),
+                              style: Theme.of(context).textTheme.bodyLarge
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                    height: 1.4,
+                                    color: Theme.of(
+                                      context,
+                                    ).textTheme.bodyMedium?.color,
+                                  ),
                             ),
                           ],
                         ),
@@ -176,8 +199,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   return Center(
                     child: Text(
                       state.message,
-                      style: const TextStyle(color: Colors.red, fontSize: 16),
                       textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.redAccent,
+                        height: 1.4,
+                      ),
                     ),
                   );
                 }
@@ -191,13 +217,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 200,
                         repeat: true,
                       ),
-                      const Text(
+                      Text(
                         'Search for a city to get weather details',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.search),
-                        onPressed: _openSearchPopup,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          height: 1.5,
+                          color: Theme.of(context).hintColor,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
                     ],
                   ),

@@ -18,10 +18,19 @@ class TileWidget extends StatelessWidget {
       children: [
         Icon(icon, size: 28),
         const SizedBox(height: 4),
-        Text(label, style: const TextStyle(color: Colors.grey)),
+        Text(
+          label,
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(height: 1.3, color: Colors.grey),
+        ),
+
         Text(
           value,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+            height: 1.2,
+          ),
         ),
       ],
     );
